@@ -11,6 +11,63 @@ def save_log(message,running_start_time):
     with open(log_file_path, "a") as myfile:
 	    myfile.write(str(message)+ "\n")
 
+def download_file(running_start_time, url, download_file_path, file_size_expected):
+    descargar=False
+    expired = False
+    #File exists?
+    if os.path.exists(download_file_path):
+        #File size is correct?
+        real_file_size = os.path.getsize(download_file_path)
+        if real_file_size != file_size_expected:
+            descargar=True
+            #Error
+            save_log("Exists but... file size expected: "+str(file_size_expected)+" <> obtained file size: "+str(real_file_size),running_start_time)
+    else:
+        descargar=True
+
+    if descargar:
+        #Download
+        save_log("Downloading...",running_start_time)
+        resp = requests.get(url, stream=True, allow_redirects=True)
+        with open(download_file_path, 'wb') as f:
+            for chunk in resp.iter_content(1024):
+                if not chunk:
+                    break
+                f.write(chunk)                        
+
+        #File size is correct?
+        real_file_size = os.path.getsize(download_file_path)
+        if real_file_size != file_size_expected:
+            #Error
+            save_log("File downloaded but... file size expected: "+str(file_size_expected)+" <> obtained file size: "+str(real_file_size),running_start_time)
+            #Token Expired Check
+            try:
+                expired = False
+                #it's a small file?
+                if real_file_size < 300:
+                    with open(download_file_path) as f:
+                        file_content = f.read()
+                    response_objects = json.loads(file_content)
+                    if response_objects['errorMessage']=="Forbidden":
+                        save_log("Token expired","admin-"+str(running_start_time))
+                        expired = True
+            except:
+                expired = False
+    return not expired
+
+
+def token_expired_check(response_objects, running_start_time):
+    expired = True
+    try:
+        if response_objects['message']=="Access token is expired.":
+            save_log("Token expired","admin-"+str(running_start_time))
+            expired = True
+        else:
+            expired = False
+    except:
+        expired = False
+    return expired
+
 def download_recordings(users_selected):
 
     API_KEY = config('API_KEY')
@@ -24,7 +81,6 @@ def download_recordings(users_selected):
     error = False
 
     client = ZoomClient(API_KEY, API_SECRET)
-
     access_token=client.config["token"]
     user_list_response = client.user.list(page_size=300)
     user_list = json.loads(user_list_response.content)
@@ -64,17 +120,11 @@ def download_recordings(users_selected):
                         user_recordings_response = client.recording.list(user_id=uid, start=search_start_date, end=search_end_date)
                         save_log(user_recordings_response.content,"admin-"+str(running_start_time))
                         user_recordings = json.loads(user_recordings_response.content)
-                        try:
-                            if user_recordings['message']=="Access token is expired.":
-                                save_log("Token renovation","admin-"+str(running_start_time))
-                                error = True
-                                client = ZoomClient(API_KEY, API_SECRET)
-                                access_token=client.config["token"]
-                            else:
-                                error = False
-                        except:
-                            error = False
-                                        
+                        error = token_expired_check(user_recordings, running_start_time)
+                        if error:
+                            client = ZoomClient(API_KEY, API_SECRET)
+                            access_token=client.config["token"]
+             
                     save_log("From: "+user_recordings['from'],running_start_time)
                     save_log("To: "+user_recordings['to'],running_start_time)
 
@@ -103,50 +153,21 @@ def download_recordings(users_selected):
                                 if (os.path.isdir(download_dir_path)==False):
                                     os.makedirs(download_dir_path)
 
-                                descargar=False
-                                #File exists?
-                                if os.path.exists(download_file_path):
-                                    #File size is correct?
-                                    real_file_size = os.path.getsize(download_file_path)
-                                    if real_file_size != file_size_expected:
-                                        descargar=True
-                                        #Error
-                                        save_log("Exists but... file size expected: "+str(file_size_expected)+" <> obtained file size: "+str(real_file_size),running_start_time)
-                                else:
-                                    descargar=True
-
-                                if descargar:
-                                    #Download
-                                    save_log("Downloading...",running_start_time)
-                                    resp = requests.get(url, stream=True, allow_redirects=True)
-                                    with open(download_file_path, 'wb') as f:
-                                        for chunk in resp.iter_content(1024):
-                                            if not chunk:
-                                                break
-                                            f.write(chunk)                        
-
-                                    #File size is correct?
-                                    real_file_size = os.path.getsize(download_file_path)
-                                    if real_file_size != file_size_expected:
-                                        #Error
-                                        save_log("File downloaded but... file size expected: "+str(file_size_expected)+" <> obtained file size: "+str(real_file_size),running_start_time)
-
-
+                                success=download_file(running_start_time, url, download_file_path, file_size_expected)
+                                while not success:
+                                    client = ZoomClient(API_KEY, API_SECRET)
+                                    access_token=client.config["token"]                           
+                                    url = recording_file['download_url']+"?access_token="+access_token
+                                    success=download_file(running_start_time, url, download_file_path, file_size_expected)
     
         user_page=user_page+1
         error = True
         while (error):
             user_list_response = client.user.list(page_size=300, page_number=user_page)
             save_log(user_list_response.content,"admin-"+str(running_start_time))            
-            user_list = json.loads(user_list_response.content)            
-            try:
-                if user_list['message']=="Access token is expired.":
-                    save_log("Token renovation","admin-"+str(running_start_time))
-                    error = True
-                    client = ZoomClient(API_KEY, API_SECRET)
-                    access_token=client.config["token"]
-                else:
-                    error = False
-            except:
-                error = False
+            user_list = json.loads(user_list_response.content)
+            error = token_expired_check(user_list, running_start_time)
+            if error:
+                client = ZoomClient(API_KEY, API_SECRET)
+                access_token=client.config["token"]
 

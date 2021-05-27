@@ -5,11 +5,18 @@ A Python library to download Zoom users recordings
 ## Dependencias
 
 * Python 3,6+
-* Además de instalar los siguientes paquetes:
-   * `apt install python3.7-venv python3.7-pip`
-   * `pip3 install zoomus`
-   * `pip3 install python-decouple`
-   * `pip3 install python-dateutil`
+* Además de instalar los siguientes paquetes requeridos:
+   * zoomus
+   * python-decouple
+   * python-dateutil
+
+En sistemas Debian puede instalar las dependencias necesarias así:
+```
+`apt install python3-venv python3-pip`
+`pip3 install zoomus`
+`pip3 install python-decouple`
+`pip3 install python-dateutil`
+```
 
 ## Uso
 
@@ -30,8 +37,3 @@ download_recordings(users_selected)
 ```
 
 Puede encontrar otro ejemplo en [`example_main.py`](example_main.py)
-
-
-
-
-
