@@ -1,33 +1,41 @@
 # Zoom Recordings Downloader
 
+> This [README in Spanish](README.es.md)
+
 A Python library to download Zoom users recordings
 
-## Dependencias
+## Arquitecture and requirements
 
-* Python 3,6+
-* Además de instalar los siguientes paquetes requeridos:
+To automatically access recordings for download, you must have a Zoom account with developer privilegies in Zoom platform. You can then dowonload the recordings of all the virtual rooms that your account has aqcces to.
+
+The library is called from a program running in server or a local system with Python, and accesses Zoom platform ressources through an [API JWT](https://marketplace.zoom.us/docs/guides/auth/jwt).
+
+## Dependencies on your system
+
+* Python version 3.6 or higher
+* Morover, you must install the following packages:
    * zoomus
    * python-decouple
    * python-dateutil
 
-En sistemas Debian puede instalar las dependencias necesarias así:
+On Debian and debian-like systems, you can install the needed dependencies as follows: 
 ```
-`apt install python3-venv python3-pip`
-`pip3 install zoomus`
-`pip3 install python-decouple`
-`pip3 install python-dateutil`
+apt install python3-venv python3-pip
+pip3 install zoomus`
+pip3 install python-decouple
+pip3 install python-dateutil
 ```
 
-## Uso
+## Usage
 
-Primero deberá crear una JWT App accediendo con las credenciales de su cuenta en el [Marketplace de Zoom](https://marketplace.zoom.us/) para lo cual se recomiendoa seguir [esta documentación](https://marketplace.zoom.us/docs/guides/build/jwt-app).
+First you must create a JWT App, accessing with your credentials inti the [Zoom Marketplace](https://marketplace.zoom.us/), following this [this documentation](https://marketplace.zoom.us/docs/guides/build/jwt-app).
 
-Luego de esto deberá crear un archivo `.env` dentro del mismo directorio donde ubique la librería `zoom_recordings.py`. Puede tomar como referencia el ejemplo [`example.env`](example.env). El `.env` es el archivo de configuración de la librería. Allí deberá indicar entre otras cosas:
-* las credenciales (`API_KEY` y `API_SECRET`) de su JWT App recientemente creada.
-* la fecha incial (`start_year`, `start_month`, `start_day_of_month`) a partir de la cual se quieren seleccionar las grabaciones (por su fecha de grabación).
-* rutas de directorios para ubicar las grabaciones descargadas (`download_root_path`) y los logs (`log_dir_path`).
+Then, a `.env` file must be created, in the same directory as the library `zoom_recordings.py`. Teh [`example.env`](example.env) file gives a reference for this tasc. This `.env` file is the configuration file of the library. It must particularly contain:
+* the credentials (`API_KEY` and `API_SECRET`) of the JWT App just created in the Zoom platform.
+* the initial date (`start_year`, `start_month`, `start_day_of_month`) since when the script shall download recordings (according to their creation date).
+* paths to save the downloaded recordings (`download_root_path`) and the logs (`log_dir_path`).
 
-Por último, para usar la librería `zoom_recordings.py`, puede crear otro archivo .py donde importar la funcion `download_recordings` y personalizar su invocación. Esta función recibe por parámetro la lista de usuarios (`users_selected`) para los cuales se desean descargar sus grabaciones. A continuación un ejemplo de su utilización:
+Finally, to run the library `zoom_recordings.py`, you can call it from a python program, creating another .py file to import the `download_recordings` and customize parameters. This function needs as parameters the list of users, or more precisely rooms (`users_selected`) which recordings you want to download. Heere is a use example:
 
 ```
 from zoom_recordings import download_recordings
@@ -36,4 +44,4 @@ users_selected=["user01@example.com","user02@example.com"]
 download_recordings(users_selected)
 ```
 
-Puede encontrar otro ejemplo en [`example_main.py`](example_main.py)
+You can find another example in [`example_main.py`](example_main.py).
