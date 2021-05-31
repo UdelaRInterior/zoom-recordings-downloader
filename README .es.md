@@ -6,7 +6,7 @@ Una librería Python para descargar las grabaciones de cuentas Zoom.us
 
 ## Arquitectura y requisitos
 
-Para acceder automáticamente a las grabaciones para descarga, se debe disponer de una cuenta Zoom con privilegios developer en la nube Zoom. Se podrá entonces descargar las grabaciones de todas las salas Zoom a las que la cuenta utilizada tenga acceso. 
+Para poder descargar las grabaciones utilizando este utilitaro, se debe disponer de una cuenta Zoom con privilegios developer en la nube Zoom. Se podrá entonces descargar las grabaciones de todas las salas Zoom a las que la cuenta utilizada tenga acceso. 
 
 La librería es llamada desde un programa que corre en un servidor o sistema local capaz de correr Python, y accede a los recursos de la nube Zoom a través de una [API JWT](https://marketplace.zoom.us/docs/guides/auth/jwt).
 
