@@ -30,7 +30,7 @@ pip3 install python-dateutil
 
 First you must create a JWT App, accessing with your credentials into the [Zoom Marketplace](https://marketplace.zoom.us/), following this [this documentation](https://marketplace.zoom.us/docs/guides/build/jwt-app).
 
-Then, a `.env` file must be created, in the same directory as the library `zoom_recordings.py`. The [`example.env`](example.env) file gives a reference for this task. This `.env` file is the configuration file of the library. It must particularly contain:
+Then, a file named `.env` (hidden file) must be created in the same directory as the library `zoom_recordings.py`. The [`example.env`](example.env) file gives a reference for this task. This `.env` file is the configuration file of the library. It must particularly contain:
 * the credentials (`API_KEY` and `API_SECRET`) of the JWT App just created in the Zoom platform.
 * the initial date (`start_year`, `start_month`, `start_day_of_month`) since when the script shall download recordings (according to their creation date).
 * paths to save the downloaded recordings (`download_root_path`) and the logs (`log_dir_path`).

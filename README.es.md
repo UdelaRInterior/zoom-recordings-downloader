@@ -31,7 +31,7 @@ pip3 install python-dateutil
 
 Primero deberá crear una JWT App accediendo con las credenciales de su cuenta en el [Marketplace de Zoom](https://marketplace.zoom.us/) para lo cual se recomiendoa seguir [esta documentación](https://marketplace.zoom.us/docs/guides/build/jwt-app).
 
-Luego de esto deberá crear un archivo `.env` dentro del mismo directorio donde ubique la librería `zoom_recordings.py`. Puede tomar como referencia el ejemplo [`example.env`](example.env). El `.env` es el archivo de configuración de la librería. Allí deberá indicar entre otras cosas:
+Luego de esto deberá crear un archivo denominado `.env` (archivo oculto a `ls`) dentro del mismo directorio donde ubique la librería `zoom_recordings.py`. Puede tomar como referencia el ejemplo [`example.env`](example.env). `.env` es el archivo de configuración de la librería. Allí deberá indicar entre otras cosas:
 * las credenciales (`API_KEY` y `API_SECRET`) de su JWT App recientemente creada.
 * la fecha incial (`start_year`, `start_month`, `start_day_of_month`) a partir de la cual se quieren seleccionar las grabaciones (por su fecha de grabación).
 * rutas de directorios para ubicar las grabaciones descargadas (`download_root_path`) y los logs (`log_dir_path`).
