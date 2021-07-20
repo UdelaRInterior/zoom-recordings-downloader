@@ -8,7 +8,7 @@ Una librería Python para descargar las grabaciones de cuentas Zoom.us
 
 Para poder descargar las grabaciones utilizando este utilitaro, se debe disponer de una cuenta Zoom con privilegios developer en la nube Zoom. Se podrá entonces descargar las grabaciones de todas las salas Zoom a las que la cuenta utilizada tenga acceso. 
 
-La librería es llamada desde un programa que corre en un servidor o sistema local capaz de correr Python, y accede a los recursos de la nube Zoom a través de una [API JWT](https://marketplace.zoom.us/docs/guides/auth/jwt).
+La librería es llamada desde un programa que corre en un servidor o sistema local capaz de ejecutar Python, y accede a los recursos de la nube Zoom a través de una [API JWT](https://marketplace.zoom.us/docs/guides/auth/jwt).
 
 
 ## Dependencias en el sistema local
@@ -22,7 +22,7 @@ La librería es llamada desde un programa que corre en un servidor o sistema loc
 En sistemas Debian o derivados, se puede instalar las dependencias necesarias así:
 ```
 apt install python3-venv python3-pip
-pip3 install zoomus`
+pip3 install zoomus
 pip3 install python-decouple
 pip3 install python-dateutil
 ```
@@ -44,5 +44,8 @@ from zoom_recordings import download_recordings
 users_selected=["user01@example.com","user02@example.com"]
 download_recordings(users_selected)
 ```
-
+Y luego corre ese script con python 3. Digamos que el archivo con el precedente código se llama `descargar_misgrabaciones.py` y que estamos en un host debian: 
+```
+$ python3 descargar_misgrabaciones.py
+```
 Puede encontrar otro ejemplo en [`example_main.py`](example_main.py).

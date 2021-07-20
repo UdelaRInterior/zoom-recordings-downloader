@@ -21,7 +21,7 @@ The library is called from a program running in server or a local system with Py
 On Debian and debian-like systems, you can install the needed dependencies as follows: 
 ```
 apt install python3-venv python3-pip
-pip3 install zoomus`
+pip3 install zoomus
 pip3 install python-decouple
 pip3 install python-dateutil
 ```
@@ -42,6 +42,10 @@ from zoom_recordings import download_recordings
 
 users_selected=["user01@example.com","user02@example.com"]
 download_recordings(users_selected)
+```
+And you run it with python 3. Let's say you called `download_myrecs.py` a file with the above code, in a debian host you must execute:
+```
+$ python3 download_myrecs.py
 ```
 
 You can find another example in [`example_main.py`](example_main.py).
